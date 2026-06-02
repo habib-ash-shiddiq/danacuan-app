@@ -652,18 +652,18 @@ function GoalsScreen() {
 function ProfileScreen() {
   return (
     <div className="p-5">
-      <div className="flex flex-col items-center mt-6">
-        <div className="w-28 h-28 bg-white rounded-3xl shadow-md flex items-center justify-center p-2">
-          <img
-            src="/danacuan-logo.png"
-            alt="DanaCuan Logo"
-            className="w-full h-full object-contain"
-          />
-        </div>
-
-        <h1 className="text-2xl font-bold mt-4">Toko Sari Rasa</h1>
-        <p className="text-sm text-slate-500">MSME Business Account</p>
+    <div className="flex flex-col items-center mt-6">
+      <div className="w-36 h-36 bg-white rounded-3xl shadow-md flex items-center justify-center p-3 overflow-hidden">
+        <img
+          src="/tallo-coffee.png"
+          alt="TALLO Coffee"
+          className="w-full h-full object-contain"
+        />
       </div>
+
+      <h1 className="text-2xl font-bold mt-4">TALLO Coffee</h1>
+      <p className="text-sm text-slate-500">MSME Business Account</p>
+    </div>
 
       <div className="mt-8 space-y-3">
         <ProfileItem title="Business Type" value="Food & Beverage" />
