@@ -655,7 +655,7 @@ function ProfileScreen() {
     <div className="flex flex-col items-center mt-6">
       <div className="w-36 h-36 bg-white rounded-3xl shadow-md flex items-center justify-center p-3 overflow-hidden">
         <img
-          src="/tallo-coffee.png"
+          src="/tallo-coffee.jpg"
           alt="TALLO Coffee"
           className="w-full h-full object-contain"
         />
