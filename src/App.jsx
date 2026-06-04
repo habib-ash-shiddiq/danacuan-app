@@ -83,6 +83,30 @@ const userProgress = {
   badge: "Funding Learner",
 };
 
+const dailyMissions = [
+  {
+    title: "Record today’s QRIS sales",
+    desc: "Keep your digital sales records updated.",
+    xp: "+10 XP",
+    status: "Completed",
+    icon: "📱",
+  },
+  {
+    title: "Review cash flow limit",
+    desc: "Check whether your expenses are still under control.",
+    xp: "+15 XP",
+    status: "In Progress",
+    icon: "📊",
+  },
+  {
+    title: "Complete scam alert quiz",
+    desc: "Learn how to avoid risky payment activities.",
+    xp: "+20 XP",
+    status: "Pending",
+    icon: "🛡️",
+  },
+];
+
 const learningTips = [
   {
     title: "Separate personal and business money",
@@ -621,6 +645,55 @@ function HomeScreen({
             <p className="font-semibold mt-1">
               🔥 {userProgress.streak} days of financial learning
             </p>
+          </div>
+        </div>
+        
+        <div>
+          <div className="flex justify-between items-center mb-3">
+            <h3 className="font-bold">Daily MSME Missions</h3>
+            <p className="text-sm text-emerald-600 font-medium">Today</p>
+          </div>
+
+          <div className="space-y-3">
+            {dailyMissions.map((mission) => (
+              <div
+                key={mission.title}
+                className="bg-slate-50 border border-slate-100 p-4 rounded-2xl flex items-start gap-3"
+              >
+                <div className="w-11 h-11 bg-white rounded-xl flex items-center justify-center shadow-sm text-xl">
+                  {mission.icon}
+                </div>
+
+                <div className="flex-1">
+                  <div className="flex justify-between items-start gap-2">
+                    <p className="font-semibold text-sm">{mission.title}</p>
+                    <p className="text-xs font-bold text-emerald-600 whitespace-nowrap">
+                      {mission.xp}
+                    </p>
+                  </div>
+
+                  <p className="text-xs text-slate-500 mt-1">{mission.desc}</p>
+
+                  <div className="mt-3 flex justify-between items-center">
+                    <span
+                      className={`text-xs px-3 py-1 rounded-full font-semibold ${
+                        mission.status === "Completed"
+                          ? "bg-emerald-100 text-emerald-700"
+                          : mission.status === "In Progress"
+                          ? "bg-yellow-100 text-yellow-700"
+                          : "bg-slate-200 text-slate-600"
+                      }`}
+                    >
+                      {mission.status}
+                    </span>
+
+                    <button className="text-xs font-semibold text-blue-900">
+                      View
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         </div>                     
         
