@@ -53,6 +53,28 @@ const features = [
   },
 ];
 
+const businessGames = [
+  {
+    title: "Cash Flow Challenge",
+    desc: "Answer quick business finance questions and improve your money discipline.",
+    reward: "+20 XP",
+    icon: "🎮",
+  },
+  {
+    title: "Scam Alert Quiz",
+    desc: "Learn how to detect risky QRIS and transfer activities.",
+    reward: "+15 XP",
+    icon: "🛡️",
+  },
+  {
+    title: "Funding Mission",
+    desc: "Complete tasks to improve your MSME funding readiness score.",
+    reward: "+25 XP",
+    icon: "🏦",
+  },
+];
+
+
 const learningTips = [
   {
     title: "Separate personal and business money",
@@ -490,7 +512,44 @@ function HomeScreen({ balance, income, expense, openAddModal, openAiModal }) {
               </div>
             ))}
           </div>
-        </div>     
+        </div>
+        
+        <div>
+          <div className="flex justify-between items-center mb-3">
+            <h3 className="font-bold">Business Quest</h3>
+            <p className="text-sm text-emerald-600 font-medium">Gamified Learning</p>
+          </div>
+
+          <div className="space-y-3">
+            {businessGames.map((game) => (
+              <div
+                key={game.title}
+                className="bg-gradient-to-r from-blue-50 to-emerald-50 border border-emerald-100 p-4 rounded-2xl"
+              >
+                <div className="flex items-start gap-3">
+                  <div className="w-11 h-11 bg-white rounded-xl flex items-center justify-center shadow-sm text-xl">
+                    {game.icon}
+                  </div>
+
+                  <div className="flex-1">
+                    <div className="flex justify-between items-start">
+                      <p className="font-semibold text-sm">{game.title}</p>
+                      <p className="text-xs font-bold text-emerald-600">
+                        {game.reward}
+                      </p>
+                    </div>
+
+                    <p className="text-xs text-slate-500 mt-1">{game.desc}</p>
+
+                    <button className="mt-3 bg-blue-900 text-white px-4 py-2 rounded-xl text-xs font-semibold">
+                      Start Quest
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>             
         
         <div>
           <div className="flex justify-between items-center mb-3">
