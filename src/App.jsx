@@ -195,6 +195,8 @@ export default function App() {
   const [showAddModal, setShowAddModal] = useState(false);
   const [showAiModal, setShowAiModal] = useState(false);
   const [showApprovalModal, setShowApprovalModal] = useState(false);
+  const [showQuestModal, setShowQuestModal] = useState(false);
+  const [selectedQuest, setSelectedQuest] = useState(null);
   const [user, setUser] = useState(null);
   const [loadingUser, setLoadingUser] = useState(true);
 
@@ -223,6 +225,11 @@ async function loginWithGoogle() {
       redirectTo: window.location.origin,
     },
   });
+}
+
+function openQuestModal(game) {
+  setSelectedQuest(game);
+  setShowQuestModal(true);
 }
 
 async function logout() {
@@ -256,13 +263,14 @@ if (!user) {
     <div className="min-h-screen bg-slate-100 flex justify-center">
       <div className="w-full max-w-sm bg-white min-h-screen shadow-xl relative pb-24">
         {activeTab === "home" && (
-          <HomeScreen
-            balance={balance}
-            income={income}
-            expense={expense}
-            openAddModal={() => setShowAddModal(true)}
-            openAiModal={() => setShowAiModal(true)}
-          />
+        <HomeScreen
+          balance={balance}
+          income={income}
+          expense={expense}
+          openAddModal={() => setShowAddModal(true)}
+          openAiModal={() => setShowAiModal(true)}
+          openQuestModal={openQuestModal}
+        />
         )}
 
         {activeTab === "transactions" && (
@@ -289,7 +297,13 @@ if (!user) {
         {showApprovalModal && (
   <OwnerApprovalModal closeModal={() => setShowApprovalModal(false)} />
 )}
-
+        {showQuestModal && (
+          <BusinessQuestModal
+            quest={selectedQuest}
+            closeModal={() => setShowQuestModal(false)}
+          />
+        )}
+        
         <BottomNav activeTab={activeTab} setActiveTab={setActiveTab} />
       </div>
     </div>
@@ -337,7 +351,14 @@ function LoginScreen({ loginWithGoogle }) {
   );
 }
 
-function HomeScreen({ balance, income, expense, openAddModal, openAiModal }) {
+function HomeScreen({
+  balance,
+  income,
+  expense,
+  openAddModal,
+  openAiModal,
+  openQuestModal,
+}) {
   return (
     <div>
       <div className="bg-gradient-to-r from-blue-900 to-emerald-500 p-6 text-white rounded-b-3xl">
@@ -540,8 +561,10 @@ function HomeScreen({ balance, income, expense, openAddModal, openAiModal }) {
                     </div>
 
                     <p className="text-xs text-slate-500 mt-1">{game.desc}</p>
-
-                    <button className="mt-3 bg-blue-900 text-white px-4 py-2 rounded-xl text-xs font-semibold">
+                    <button
+                      onClick={() => openQuestModal(game)}
+                      className="mt-3 bg-blue-900 text-white px-4 py-2 rounded-xl text-xs font-semibold"
+                    >
                       Start Quest
                     </button>
                   </div>
@@ -1184,6 +1207,85 @@ function OwnerApprovalModal({ closeModal }) {
             Reject Transaction
           </button>
         </div>
+      </div>
+    </div>
+  );
+}
+
+function BusinessQuestModal({ quest, closeModal }) {
+  if (!quest) return null;
+
+  return (
+    <div className="fixed inset-0 bg-black/40 flex items-end justify-center z-50">
+      <div className="w-full max-w-sm bg-white rounded-t-3xl p-5">
+        <div className="flex justify-between items-center">
+          <div>
+            <h2 className="text-xl font-bold">{quest.title}</h2>
+            <p className="text-sm text-slate-500">
+              Complete this quick challenge to improve your MSME finance skill.
+            </p>
+          </div>
+
+          <button
+            onClick={closeModal}
+            className="w-9 h-9 bg-slate-100 rounded-full"
+          >
+            ✕
+          </button>
+        </div>
+
+        <div className="mt-5 bg-gradient-to-r from-blue-50 to-emerald-50 border border-emerald-100 p-4 rounded-2xl">
+          <div className="flex items-center gap-3">
+            <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center shadow-sm text-2xl">
+              {quest.icon}
+            </div>
+
+            <div>
+              <p className="font-bold">{quest.title}</p>
+              <p className="text-xs text-slate-500 mt-1">{quest.desc}</p>
+            </div>
+          </div>
+
+          <div className="mt-4 bg-white p-3 rounded-xl">
+            <p className="text-xs text-slate-500">Reward</p>
+            <p className="font-bold text-emerald-600 mt-1">{quest.reward}</p>
+          </div>
+        </div>
+
+        <div className="mt-5 bg-slate-50 border border-slate-100 p-4 rounded-2xl">
+          <p className="font-bold">Question</p>
+          <p className="text-sm text-slate-700 mt-2">
+            Which action helps an MSME become more funding-ready?
+          </p>
+
+          <div className="mt-4 space-y-3">
+            <button className="w-full text-left bg-white border border-slate-200 p-3 rounded-xl text-sm">
+              A. Mix personal and business money
+            </button>
+
+            <button className="w-full text-left bg-emerald-50 border border-emerald-200 p-3 rounded-xl text-sm font-semibold text-emerald-700">
+              B. Keep consistent digital transaction records
+            </button>
+
+            <button className="w-full text-left bg-white border border-slate-200 p-3 rounded-xl text-sm">
+              C. Ignore supplier payment records
+            </button>
+          </div>
+        </div>
+
+        <div className="mt-5 bg-blue-50 border border-blue-100 p-4 rounded-2xl">
+          <p className="font-bold text-blue-900">Learning Result</p>
+          <p className="text-sm text-slate-700 mt-1">
+            Correct answer: consistent transaction records help improve business credibility and funding readiness.
+          </p>
+        </div>
+
+        <button
+          onClick={closeModal}
+          className="w-full bg-blue-900 text-white py-3 rounded-2xl font-semibold mt-5"
+        >
+          Complete Quest
+        </button>
       </div>
     </div>
   );
