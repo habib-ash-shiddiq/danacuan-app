@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { supabase } from "./lib/supabaseClient";
 
 const transactions = [
   { id: 1, title: "QRIS Sales", category: "Business Income", amount: 3500000, type: "income", date: "Today", source: "QRIS" },
@@ -172,6 +173,52 @@ export default function App() {
   const [showAddModal, setShowAddModal] = useState(false);
   const [showAiModal, setShowAiModal] = useState(false);
   const [showApprovalModal, setShowApprovalModal] = useState(false);
+  const [user, setUser] = useState(null);
+  const [loadingUser, setLoadingUser] = useState(true);
+
+  useEffect(() => {
+  async function getUser() {
+    const { data } = await supabase.auth.getUser();
+    setUser(data.user);
+    setLoadingUser(false);
+  }
+
+  getUser();
+
+  const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
+    setUser(session?.user ?? null);
+  });
+
+  return () => {
+    listener.subscription.unsubscribe();
+  };
+}, []);
+
+async function loginWithGoogle() {
+  await supabase.auth.signInWithOAuth({
+    provider: "google",
+    options: {
+      redirectTo: window.location.origin,
+    },
+  });
+}
+
+async function logout() {
+  await supabase.auth.signOut();
+  setUser(null);
+}
+
+if (loadingUser) {
+  return (
+    <div className="min-h-screen bg-slate-100 flex items-center justify-center">
+      <p className="text-slate-500">Loading DanaCuan...</p>
+    </div>
+  );
+}
+
+if (!user) {
+  return <LoginScreen loginWithGoogle={loginWithGoogle} />;
+}
 
   const income = transactions
     .filter((item) => item.type === "income")
@@ -207,7 +254,7 @@ export default function App() {
 
         {activeTab === "goals" && <GoalsScreen />}
 
-        {activeTab === "profile" && <ProfileScreen />}
+        {activeTab === "profile" && <ProfileScreen user={user} logout={logout} />}
 
         {showAddModal && (
           <AddTransactionModal closeModal={() => setShowAddModal(false)} />
@@ -222,6 +269,47 @@ export default function App() {
 )}
 
         <BottomNav activeTab={activeTab} setActiveTab={setActiveTab} />
+      </div>
+    </div>
+  );
+}
+
+function LoginScreen({ loginWithGoogle }) {
+  return (
+    <div className="min-h-screen bg-slate-100 flex justify-center">
+      <div className="w-full max-w-sm bg-white min-h-screen flex flex-col justify-center p-6">
+        <div className="flex flex-col items-center text-center">
+          <div className="w-32 h-32 bg-white rounded-3xl shadow-md flex items-center justify-center p-3">
+            <img
+              src="/danacuan-logo.png"
+              alt="DanaCuan Logo"
+              className="w-full h-full object-contain"
+            />
+          </div>
+
+          <h1 className="text-3xl font-bold mt-6">DanaCuan</h1>
+          <p className="text-sm text-slate-500 mt-2">
+            AI-powered financial management for MSMEs.
+          </p>
+        </div>
+
+        <div className="mt-8 bg-blue-50 border border-blue-100 p-4 rounded-2xl">
+          <p className="font-bold text-blue-900">Secure Business Access</p>
+          <p className="text-sm text-slate-700 mt-1">
+            Login with Google to access your MSME dashboard, transaction records, and funding readiness insights.
+          </p>
+        </div>
+
+        <button
+          onClick={loginWithGoogle}
+          className="w-full bg-blue-900 text-white py-3 rounded-2xl font-semibold mt-6"
+        >
+          Continue with Google
+        </button>
+
+        <p className="text-xs text-slate-400 text-center mt-4">
+          Prototype login for DanaCuan AFL 3.
+        </p>
       </div>
     </div>
   );
@@ -649,7 +737,7 @@ function GoalsScreen() {
   );
 }
 
-function ProfileScreen() {
+function ProfileScreen({ user, logout }) {
   return (
     <div className="p-5">
     <div className="flex flex-col items-center mt-6">
@@ -767,6 +855,19 @@ function ProfileScreen() {
       </div>
     ))}
   </div>
+</div>
+  <div className="mt-5 bg-slate-50 border border-slate-100 p-4 rounded-2xl">
+  <p className="font-bold">Logged in as</p>
+  <p className="text-sm text-slate-500 mt-1">
+    {user?.email}
+  </p>
+
+  <button
+    onClick={logout}
+    className="w-full bg-red-50 text-red-600 py-3 rounded-2xl font-semibold mt-4"
+  >
+    Logout
+  </button>
 </div>
     </div>
   );
