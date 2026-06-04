@@ -74,6 +74,14 @@ const businessGames = [
   },
 ];
 
+const userProgress = {
+  level: 3,
+  title: "Smart Seller",
+  xp: 240,
+  targetXp: 500,
+  streak: 5,
+  badge: "Funding Learner",
+};
 
 const learningTips = [
   {
@@ -572,7 +580,49 @@ function HomeScreen({
               </div>
             ))}
           </div>
-        </div>             
+        </div>
+        
+        <div className="bg-slate-900 text-white p-4 rounded-2xl">
+          <div className="flex justify-between items-start">
+            <div>
+              <p className="text-sm opacity-80">DanaCuan Level</p>
+              <h3 className="text-xl font-bold mt-1">
+                Level {userProgress.level} — {userProgress.title}
+              </h3>
+            </div>
+
+            <div className="bg-emerald-500 px-3 py-1 rounded-full text-xs font-bold">
+              {userProgress.badge}
+            </div>
+          </div>
+
+          <div className="mt-4">
+            <div className="flex justify-between text-xs opacity-80 mb-2">
+              <p>XP Progress</p>
+              <p>
+                {userProgress.xp} / {userProgress.targetXp} XP
+              </p>
+            </div>
+
+            <div className="w-full bg-white/20 h-3 rounded-full">
+              <div
+                className="bg-emerald-500 h-3 rounded-full"
+                style={{
+                  width: `${Math.round(
+                    (userProgress.xp / userProgress.targetXp) * 100
+                  )}%`,
+                }}
+              ></div>
+            </div>
+          </div>
+
+          <div className="mt-4 bg-white/10 p-3 rounded-xl">
+            <p className="text-xs opacity-70">Daily Learning Streak</p>
+            <p className="font-semibold mt-1">
+              🔥 {userProgress.streak} days of financial learning
+            </p>
+          </div>
+        </div>                     
         
         <div>
           <div className="flex justify-between items-center mb-3">
